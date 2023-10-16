@@ -1,0 +1,7 @@
+{
+  "name": "surveyPlayer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
