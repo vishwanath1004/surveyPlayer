@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
+import { SharedModule } from '../shared/shared.module';
+import { SurveyDetailsComponent } from '../survey-details/survey-details.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -12,8 +15,11 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    SharedModule,
+    TranslateModule.forChild()
   ],
-  declarations: [HomePage]
+  declarations: [HomePage,SurveyDetailsComponent],
+  exports:[SurveyDetailsComponent]
 })
 export class HomePageModule {}

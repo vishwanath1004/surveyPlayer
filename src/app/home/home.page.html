@@ -1,20 +1,25 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+    {{'FRMELEMNTS_LBL_SURVEY' | translate}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div *ngFor="let item of surveyList">
+    <app-item-card [title]="item?.name"  [subTitle]="item?.generatedExpMsg" (cardSelect)="onSurveyClick(item)">
+      <span
+        class="dot"
+        [style.background-color]="setStatusColor(item?.status)"
+        *ngIf="setStatusColor(item?.status) && !isReport"
+        color
+      ></span>
+      <ion-icon
+        arrow
+        class="mg-popup-btn-icon"
+        name="arrow-forward"
+      ></ion-icon>
+    </app-item-card>
   </div>
 </ion-content>
