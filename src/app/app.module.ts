@@ -12,11 +12,7 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 
 
 import { Camera} from "@ionic-native/camera/ngx";
-// import { Chooser } from "@ionic-native/chooser/ngx";
-// import { FilePath } from "@ionic-native/file-path/ngx";
-// import { ImagePicker } from '@ionic-native/image-picker/ngx';
-// import { FileOpener } from '@ionic-native/file-opener/ngx';
-
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 export function translateHttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
@@ -36,7 +32,8 @@ export function translateHttpLoaderFactory(httpClient: HttpClient) {
   SharedModule,
  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Camera],
+    Camera,
+    AndroidPermissions],
   bootstrap: [AppComponent],
 })
 export class AppModule {

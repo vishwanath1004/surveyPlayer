@@ -1,14 +1,9 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { AttachmentService } from '../../services/attachment.service';
-
-// import { File } from '@ionic-native/file/ngx';
-// import { FILE_EXTENSION_HEADERS } from '../../constants/file-extensions';
-// import { FileOpener } from '@ionic-native/file-opener/ngx';
-// import { Platform } from '@ionic/angular';
-
-
-
-declare let cordova: any;
+import { AlertController, ModalController } from '@ionic/angular';
+import { EvidencePreviewComponent } from '../evidence-preview/evidence-preview.component';
+import { TranslateService } from '@ngx-translate/core';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-evidence-upload',
@@ -20,7 +15,6 @@ export class EvidenceUploadComponent  implements OnInit {
   filesPath: string;
   fileName: string;
   audioList: any[] = [];
-  // isIos: boolean = this.platform.is("ios");
   interval : string;
   timeLeft: number = 0;
   minutes: number = 0;
@@ -40,7 +34,7 @@ export class EvidenceUploadComponent  implements OnInit {
   @Input()
   set data(data :any) {
     this.datas = data;
-    // this.createImageFromName(data["fileName"]);
+    this.createImageFromName(data["fileName"]);
   }
 
   get name() {
@@ -56,177 +50,92 @@ export class EvidenceUploadComponent  implements OnInit {
   imageNameCounter: number = 0;
   localEvidenceImageList: any;
 
-  constructor(
-    // private file: File,
-    // private platform: Platform,
-    // private fileOpener:FileOpener,
-    private attachmentService :AttachmentService 
-    ) { 
-    // this.isIos = this.platform.is("ios") ? true : false;
-    // if (this.isIos) {
-    //   this.file
-    //     .checkDir(this.file.documentsDirectory, "images")
-    //     .then((success : any) => { })
-    //     .catch((err : any) => {
-    //       this.file
-    //         .createDir(cordova.file.documentsDirectory, "images", false)
-    //         .then(
-    //           (success : any) => { },
-    //           (error : any) => { }
-    //         );
-    //     });
-    // } else {
-    //   this.file
-    //     .checkDir(this.file.externalDataDirectory, "images")
-    //     .then((success : any) => { })
-    //     .catch((err : any) => {
-    //       this.file
-    //         .createDir(cordova.file.externalDataDirectory, "images", false)
-    //         .then(
-    //           (success : any) => { },
-    //           (error : any) => { }
-    //         );
-    //     });
-    // }
-  }
+  constructor( 
+    private attachmentService :AttachmentService,
+    private modalController : ModalController,
+    private alertCtrl :AlertController,
+    private translate : TranslateService,
+    private androidPermissions: AndroidPermissions,
+    ) { }
 
   ngOnInit() {
-    // this.appFolderPath = this.isIos
-    // ? cordova.file.documentsDirectory + "images"
-    // : cordova.file.externalDataDirectory + "images";
+    this.imageList =[];
+    this.createImageFromName(this.datas["fileName"]);
   }
 
   async openActionSheet() {
-    console.log("openActionSheet");
     this.attachmentService.evidenceUpload(this.appFolderPath).then((data:any) =>{
       if(data.data){
-        if(data.data.multiple &&data.data.imageData ){
-          for (const image of data.data.imageData) {
-            this.checkForLocalFolder(image);
-          }
-        }else {
-        // this.pushToFileList(data.data.name);
-        }
+      this.imageList.push(data.data);
+      this.setLocalDatas(data.data);
       }
     })
     }
 
-  
-    checkRecordMediaPermission(){}
-    deleteImageAlert(index : number){}
-    // previewFile(fileName : any, extension :any) {
-    //   this.fileOpener
-    //     .open(
-    //       this.appFolderPath + "/" + fileName,
-    //       FILE_EXTENSION_HEADERS[extension]
-    //     )
-    //     .then(() => console.log("File is opened"))
-    //     .catch((e : any) => {
-    //      // this.toast.openToast("No file readers available")
-    //     });
-    // }
-    stopRecord(){}
-    checkForLocalFolder(imagePath : any) {
-      let currentName = imagePath.substr(imagePath.lastIndexOf("/") + 1);
-      let currentPath = imagePath.substr(0, imagePath.lastIndexOf("/") + 1);
-      // if (this.isIos) {
-      //   this.file
-      //     .checkDir(this.file.documentsDirectory, "images")
-      //     .then((success) => {
-      //       this.copyFileToLocalDir(currentPath, currentName);
-      //     })
-      //     .catch((err) => {
-      //       this.file
-      //         .createDir(cordova.file.documentsDirectory, "images", false)
-      //         .then(
-      //           (success) => {
-      //             this.copyFileToLocalDir(currentPath, currentName);
-      //           },
-      //           (error) => { }
-      //         );
-      //     });
-      // } else {
-      //   this.file
-      //     .checkDir(this.file.externalDataDirectory, "images")
-      //     .then((success) => {
-      //       this.copyFileToLocalDir(currentPath, currentName);
-      //     })
-      //     .catch((err) => {
-      //       this.file
-      //         .createDir(cordova.file.externalDataDirectory, "images", false)
-      //         .then(
-      //           (success) => {
-      //             this.copyFileToLocalDir(currentPath, currentName);
-      //           },
-      //           (error) => { }
-      //         );
-      //     });
-      // }
+
+    async previewFile(fileData:any) {
+        const modal = await this.modalController.create({
+        component: EvidencePreviewComponent,
+        componentProps: {
+          mediaType: fileData.type,
+          mediaUrl: fileData.data
+        },
+      });
+      return await modal.present();
     }
 
+    stopRecord(){}
+    
     getExtensionFromName(fileName : string) {
       let splitString = fileName.split(".");
       let extension = splitString[splitString.length - 1];
       return extension;
     }
-  // createImageFromName(imageList : any) {
-  //   this.isIos = this.platform.is("ios") ? true : false;
-  //   this.appFolderPath = this.isIos
-  //     ? cordova.file.documentsDirectory + "images"
-  //     : cordova.file.externalDataDirectory + "images";
-  //   for (const image of imageList) {
-  //     this.file
-  //       .checkFile(this.appFolderPath + "/", image)
-  //       .then((response) => {
-  //         this.imageList.push({
-  //           data: "",
-  //           imageName: image,
-  //           extension: this.getExtensionFromName(image),
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         this.imageList.push(image);
-  //       });
-  //   }
-  // }
-
-  // createFileName(filename : any) {
-  //   let d = new Date(),
-  //     n = d.getTime(),
-  //     extension= filename.split('.').pop(),
-  //     newFileName = n + "." + extension;
-  //   return newFileName;
-  // }
-
-  // copyFileToLocalDir(namePath: any, currentName: any) {
-
-  //   let newName = this.createFileName(currentName);
-  //   this.file
-  //     .copyFile(namePath, currentName, this.appFolderPath, newName)
-  //     .then(
-  //       (success) => {
-  //         this.pushToFileList(newName);
-  //       },
-  //       (error) => { }
-  //     );
-  // }
-
-  // pushToFileList(fileName: any) {
-  //   this.file
-  //     .checkFile(this.appFolderPath + "/", fileName)
-  //     .then((response) => {
-  //       this.imageList.push({
-  //         data: "",
-  //         imageName: fileName,
-  //         extension: this.getExtensionFromName(fileName),
-  //       });
-  //       this.setLocalDatas(fileName);
-
-  //     })
-  // }
-
   setLocalDatas(fileName: any) {
     this.datas.fileName.push(fileName);
   }
+  createImageFromName(imageList : any) {
+    for (const image of imageList) {
+          this.imageList.push(image);
+        }
+    }
 
-}
+    removeImgFromList(index : number): void {
+      this.datas.fileName.splice(index, 1);
+      this.imageList =[];
+      this.createImageFromName(this.datas["fileName"]);
+    }
+  
+    async deleteImageAlert(index :number) {
+      let translateObject :any;
+      this.translate
+        .get([
+          "FRMELEMNTS_LBL_COFIRM_DELETE",
+          "FRMELEMNTS_LBL_NO",
+          "FRMELEMNTS_LBL_YES",
+        ])
+        .subscribe((translations) => {
+          translateObject = translations;
+        });
+      let alert = await this.alertCtrl.create({
+        // header: translateObject["FRMELEMNTS_LBL_COFIRM_DELETE"],
+        message: translateObject["FRMELEMNTS_LBL_COFIRM_DELETE"],
+        cssClass:'central-alert',
+        buttons: [
+          {
+            text: translateObject["FRMELEMNTS_LBL_NO"],
+            role: "cancel",
+            handler: () => { },
+          },
+          {
+            text: translateObject["FRMELEMNTS_LBL_YES"],
+            handler: () => {
+              this.removeImgFromList(index);
+            },
+          },
+        ],
+      });
+      await alert.present();
+    }
+  
+  }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ItemCardComponent } from './components/item-card/item-card.component';
 import { IonicModule } from '@ionic/angular';
 import { DateTypeInputComponent } from './components/date-type-input/date-type-input.component';
@@ -17,6 +17,14 @@ import { SliderTypeInputComponent } from './components/slider-type-input/slider-
 import { RemarksComponent } from './components/remarks/remarks.component';
 import { RemarksModalComponent } from './components/remarks-modal/remarks-modal.component';
 import { FooterActionButtonsComponent } from './components/footer-action-buttons/footer-action-buttons.component';
+import { EvidencePreviewComponent } from './components/evidence-preview/evidence-preview.component';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+import {VgCoreModule} from '@videogular/ngx-videogular/core';
+import {VgControlsModule} from '@videogular/ngx-videogular/controls';
+import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
+import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
 
 @NgModule({
   declarations: [ItemCardComponent,DateTypeInputComponent,PageQuestionsComponent,TextTypeInputComponent,
@@ -29,13 +37,20 @@ import { FooterActionButtonsComponent } from './components/footer-action-buttons
     SliderTypeInputComponent,
     RemarksComponent,
     RemarksModalComponent,
-    FooterActionButtonsComponent],
+    FooterActionButtonsComponent,
+    EvidencePreviewComponent],
   imports: [
     CommonModule,
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
+    
+    PdfViewerModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   exports:[ItemCardComponent,DateTypeInputComponent,PageQuestionsComponent,
     TextTypeInputComponent,
@@ -48,10 +63,13 @@ import { FooterActionButtonsComponent } from './components/footer-action-buttons
     SliderTypeInputComponent,
     RemarksComponent,
     RemarksModalComponent,
-    FooterActionButtonsComponent],
+    FooterActionButtonsComponent,
+    EvidencePreviewComponent],
   providers:[   
     CommonModule,
     ReactiveFormsModule,
+    DatePipe,
+    InAppBrowser
   ]
 })
 export class SharedModule { }

@@ -20,5 +20,10 @@
     "SAVE":"Save",
     "FRMELEMENTS_BTN_BACK":"Back",
     "FRMELEMNTS_BTN_SUBMIT":"Submit",
-    "FRMELEMENTS_LBL_HINT":"Hint"
+    "FRMELEMENTS_LBL_HINT":"Hint",
+    "FRMELEMNTS_LBL_COFIRM_DELETE": "Do you want to delete this file?",
+    "FRMELEMNTS_LBL_COFIRMATION_DELETE": "Confirm Delete",
+    "FRMELEMNTS_LBL_NO":"No",
+    "FRMELEMNTS_LBL_YES":"Yes"
+
 }

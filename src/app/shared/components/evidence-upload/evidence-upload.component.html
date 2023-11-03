@@ -1,4 +1,4 @@
-<div class="_flex-box ion-margin-top"  style="flex-wrap: wrap;">
+<div class="_flex-box ion-margin-top"  style="flex-wrap: wrap; display: flex;">
 
   <div  class="_cards _flex-box _justify-content-center _flex-direction-column ion-padding" >
 
@@ -13,13 +13,12 @@
 
   <div class="_cards _flex-box  _justify-content-center" *ngFor="let image of imageList; let i = index">
     <ion-icon name="trash" class="_closeBtn" (click)="deleteImageAlert(i)"></ion-icon>
-    <div class="_overlay" (click)="previewFile(image?.imageName,image?.extension)"></div>
-    <img [src]="image?.data" alt="">
+    <div class="_overlay" (click)="previewFile(image)"></div>
+    <!-- <img [src]="image?.data" alt=""> -->
     <span>
-      <ion-icon name="document" *ngIf="pdfFormats.includes(image?.extension) || wordFormats.includes(image?.extension) || pptFormats.includes(image?.extension) "></ion-icon>
-      <ion-icon name="musical-notes" *ngIf="audioFormats.includes(image?.extension)"></ion-icon>
-      <ion-icon name="videocam"  *ngIf="videoFormats.includes(image?.extension)"></ion-icon>
-      <ion-icon class="attachmentIcon" name="image" *ngIf="imageFormats.includes(image?.extension)"></ion-icon>
+      <ion-icon class="attachmentIcon" name="document" *ngIf="image?.type.includes('application/pdf') || wordFormats.includes(image?.type) || pptFormats.includes(image?.type) "></ion-icon>
+      <ion-icon class="attachmentIcon" name="videocam"  *ngIf="image?.type.includes('video')"></ion-icon>
+      <ion-icon class="attachmentIcon" name="image" *ngIf="image?.type.includes('image')"></ion-icon>
     </span>
   </div>
   <ion-card *ngIf="datas?.allowAudioRecording">

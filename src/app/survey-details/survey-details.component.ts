@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute,Router } from '@angular/router';
-// import { Storage } from '@ionic/storage';
 import { UtilServiceService } from '../shared/services/util.service.service';
 import {details} from "../shared/mockdata/survey-details";
 import { Location } from '@angular/common';
@@ -63,18 +62,15 @@ export class SurveyDetailsComponent  implements OnInit {
   }
 
   ngOnInit() {
-    this.getQuestions(details);
-    // if(this.extrasState){
-    //   this.isViewOnly = true;
-    //   this.getQuestions(this.extrasState);
-    // }else{
-    //   this.localStorage
-    //   .get(this.utils.getAssessmentLocalStorageKey(this.submissionId))
-    //   .then((data) => {
-    //     console.log(data,"data");
-    //     this.getQuestions(data);
-    //   })
-    // }
+    // this.getQuestions(details);
+    if(this.extrasState){
+      this.isViewOnly = true;
+      this.getQuestions(this.extrasState);
+    }else{
+     let data:any = localStorage.getItem(this.utils.getAssessmentLocalStorageKey(this.submissionId));
+     console.log(data,"data");
+    data ? this.getQuestions(JSON.parse(data)) :  this.getQuestions(details);
+    }
   }
 
   getQuestions(data : any){
@@ -182,14 +178,11 @@ export class SurveyDetailsComponent  implements OnInit {
       this.schoolData['assessment']['evidences'][this.selectedEvidenceIndex].sections[
         this.selectedSectionIndex
       ].progressStatus = this.getSectionStatus();
-   let success : any =  localStorage.setItem(this.utils.getAssessmentLocalStorageKey(this.submissionId), this.schoolData)
-       if(success) {
-          this.schoolData.observation || this.schoolData.survey
-            ? this.checkForAllEcmCompletion()
-            : this.location.back();
-        }
+      let respData = JSON.stringify(this.schoolData);
+        localStorage.setItem(this.utils.getAssessmentLocalStorageKey(this.submissionId), respData)
+        this.uploadImage(this.schoolData);
+         this.location.back();
     } else {
-      console.log("completed");
       this.next('completed');
     }
     this.updateCompletedQuestionCount();
@@ -320,6 +313,11 @@ export class SurveyDetailsComponent  implements OnInit {
       currentSection.progressStatus = '';
     }
     return currentSection.progressStatus;
+  }
+
+
+  uploadImage(data:any){
+  console.log(data,"data");
   }
 
 }
