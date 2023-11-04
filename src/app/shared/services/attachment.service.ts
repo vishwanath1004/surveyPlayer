@@ -44,14 +44,14 @@ export class AttachmentService {
       header: this.texts["FRMELEMNTS_MSG_SELECT_IMAGE_SOURCE"],
       cssClass: 'sb-popover',
       buttons: [
-        {
-          text: this.texts["FRMELEMENTS_LBL_CAMERA"],
-          icon: "camera",
-          handler: () => {
-            this.getFile('image/*','camera');
-            return false;
-          },
-        },
+        // {
+        //   text: this.texts["FRMELEMENTS_LBL_CAMERA"],
+        //   icon: "camera",
+        //   handler: () => {
+        //     this.getFile('image/*','camera');
+        //     return false;
+        //   },
+        // },
         {
           text: this.texts["FRMELEMENTS_LBL_UPLOAD_IMAGE"],
           icon: "cloud-upload",
@@ -105,7 +105,6 @@ export class AttachmentService {
                         type: this.mimeType(newFileName),
                         isUploaded: false,
                         data:e.target.result,
-                        url: URL.createObjectURL(selectedFile)
                       };
                     this.presentToast(this.texts["FRMELEMNTS_MSG_SUCCESSFULLY_ATTACHED"], "success");
                     this.actionSheetController.dismiss(data);
