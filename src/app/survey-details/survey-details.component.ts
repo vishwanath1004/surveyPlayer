@@ -68,7 +68,6 @@ export class SurveyDetailsComponent  implements OnInit {
       this.getQuestions(this.extrasState);
     }else{
      let data:any = localStorage.getItem(this.utils.getAssessmentLocalStorageKey(this.submissionId));
-     console.log(data,"data");
     data ? this.getQuestions(JSON.parse(data)) :  this.getQuestions(details);
     }
   }
@@ -92,7 +91,6 @@ export class SurveyDetailsComponent  implements OnInit {
     this.schoolData['assessment']['evidences'][this.selectedEvidenceIndex]['sections'][
       this.selectedSectionIndex
     ].totalQuestions = this.questions.length;
-    console.log(this.questions,"this.questions");
     this.dashbordData = {
       questions: this.questions,
       evidenceMethod: currentEvidences[this.selectedEvidenceIndex]['name'],
@@ -142,17 +140,13 @@ export class SurveyDetailsComponent  implements OnInit {
   }
 
   next(status?: string) {
-    console.log(status,"status");
-    // this.pageTop.scrollToTop();
     if (this.questions[this.start].responseType === 'pageQuestions') {
       this.questions[this.start].endTime = this.questions[this.start] ? Date.now() : '';
       this.questions[this.start].isCompleted = this.utils.isPageQuestionComplete(this.questions[this.start]);
     }
-    console.log(this.questions[this.start].children.length,"this.questions[this.start].children.length");
     if (this.questions[this.start].children.length) {
       this.updateTheChildrenQuestions(this.questions[this.start]);
     }
-    console.log(this.end < this.questions.length && !status,"this.end < this.questions.length && !status");
     if (this.end < this.questions.length && !status) {
       if (this.submissionId) {
        localStorage.setItem(this.utils.getAssessmentLocalStorageKey(this.submissionId), this.schoolData);
@@ -165,7 +159,6 @@ export class SurveyDetailsComponent  implements OnInit {
         this.questions[this.start].visibleIf[0] &&
         !this.checkForQuestionDisplay(this.questions[this.start])
       ) {
-        console.log( this.questions[this.start].isCompleted," this.questions[this.start].isCompleted")
         this.questions[this.start].isCompleted = true;
         this.next();
       } else if (
@@ -180,7 +173,6 @@ export class SurveyDetailsComponent  implements OnInit {
       ].progressStatus = this.getSectionStatus();
       let respData = JSON.stringify(this.schoolData);
         localStorage.setItem(this.utils.getAssessmentLocalStorageKey(this.submissionId), respData)
-        this.uploadImage(this.schoolData);
          this.location.back();
     } else {
       this.next('completed');
@@ -225,70 +217,6 @@ export class SurveyDetailsComponent  implements OnInit {
     }
   }
 
-  checkForAllEcmCompletion() {
-    let data : any = localStorage.getItem(this.utils.getAssessmentLocalStorageKey(this.submissionId));
-      if(data){
-        let completedAllSections = true;
-        let currentEcm = data.assessment.evidences[this.selectedEvidenceIndex];
-        for (const section of currentEcm.sections) {
-          if (section.progressStatus !== 'completed') {
-            completedAllSections = false;
-            break;
-          }
-        }
-        if (completedAllSections && !currentEcm.isSubmitted) {
-          this.openActionSheet();
-        } else {
-          this.location.back();
-        }
-      }
-   
-  }
-
-
-
-  async openActionSheet() {
-    let translateObject : any;
-    this.translate
-      .get(['FRMELEMNTS_BTN_SUBMIT_FORM', 'FRMELEMNTS_BTN_PREVIEW_FORM', 'FRMELEMNTS_BTN_SAVE_FORM'])
-      .subscribe((translations) => {
-        translateObject = translations;
-      });
-    let actionSheet = await this.actionSheetCtrl.create({
-      // title: 'Modify your album',
-      buttons: [
-        {
-          text: translateObject['FRMELEMNTS_BTN_SUBMIT_FORM'],
-          icon: 'cloud-upload',
-          handler: () => {
-            console.log(this.questions,"question")
-            // this.checkForNetworkTypeAlert();
-          },
-        },
-        {
-          text: translateObject['FRMELEMNTS_BTN_PREVIEW_FORM'],
-          icon: 'clipboard',
-          handler: () => {
-            // this.router.navigate([RouterLinks.SUBMISSION_PREVIEW], {
-            //   queryParams: {
-            //     submissionId: this.submissionId,
-            //     name: this.schoolName,
-            //     selectedEvidenceIndex: this.selectedEvidenceIndex,
-            //   },
-            // });
-          },
-        },
-        {
-          text: translateObject['FRMELEMNTS_BTN_SAVE_FORM'],
-          icon: 'file-tray-full',
-          handler: () => {
-            this.location.back();
-          },
-        },
-      ],
-    });
-    actionSheet.present();
-  }
   getSectionStatus(): string {
     let allAnswered = true;
     let currentEcm = this.schoolData['assessment']['evidences'][this.selectedEvidenceIndex];
@@ -314,10 +242,4 @@ export class SurveyDetailsComponent  implements OnInit {
     }
     return currentSection.progressStatus;
   }
-
-
-  uploadImage(data:any){
-  console.log(data,"data");
-  }
-
 }

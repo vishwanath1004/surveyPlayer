@@ -9,7 +9,8 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SharedModule } from './shared/shared.module';
 import { FilePath } from '@ionic-native/file-path/ngx';
-
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 import { Camera} from "@ionic-native/camera/ngx";
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
@@ -33,6 +34,8 @@ export function translateHttpLoaderFactory(httpClient: HttpClient) {
  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
+    File,
+    FileOpener,
     AndroidPermissions],
   bootstrap: [AppComponent],
 })
@@ -40,8 +43,6 @@ export class AppModule {
   constructor(
     private translate: TranslateService) {
     this.setDefaultLanguage();
-    console.log('Onboarding Config');
-    
   }
 
   private setDefaultLanguage() {

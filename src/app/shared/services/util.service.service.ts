@@ -43,9 +43,7 @@ export class UtilServiceService {
       };
   }
   isPageQuestionComplete(question : any) {
-    console.log(question.pageQuestions,"question.pageQuestions")
     for (const element of question.pageQuestions) {
-      console.log(element,"element")
       if (!element.isCompleted) {
         return false;
       }

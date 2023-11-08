@@ -38,7 +38,6 @@ export class PageQuestionsComponent implements OnInit,OnDestroy {
 
 
   ngOnDestroy() {
-    console.log(JSON.stringify(this.data))
     for (const question of this.data.pageQuestions) {
       // Do check only for questions without visibleif. For visibleIf questions isCompleted property is set in  checkForVisibility()
       if (!question.visibleIf) {

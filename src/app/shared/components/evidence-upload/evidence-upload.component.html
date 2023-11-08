@@ -13,7 +13,7 @@
 
   <div class="_cards _flex-box  _justify-content-center" *ngFor="let image of imageList; let i = index">
     <ion-icon name="trash" class="_closeBtn" (click)="deleteImageAlert(i)"></ion-icon>
-    <div class="_overlay" (click)="previewFile(image)"></div>
+    <div class="_overlay" (click)="openFile(image)"></div>
     <!-- <img [src]="image?.data" alt=""> -->
     <span>
       <ion-icon class="attachmentIcon" name="document" *ngIf="image?.type.includes('application/pdf') || wordFormats.includes(image?.type) || pptFormats.includes(image?.type) "></ion-icon>

@@ -1,9 +1,9 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { AttachmentService } from '../../services/attachment.service';
-import { AlertController, ModalController } from '@ionic/angular';
-import { EvidencePreviewComponent } from '../evidence-preview/evidence-preview.component';
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 @Component({
   selector: 'app-evidence-upload',
@@ -19,7 +19,7 @@ export class EvidenceUploadComponent  implements OnInit {
   timeLeft: number = 0;
   minutes: number = 0;
   seconds: number = 0;
-
+  path : string;
   text: string;
   datas : any;
   appFolderPath: string;
@@ -52,19 +52,21 @@ export class EvidenceUploadComponent  implements OnInit {
 
   constructor( 
     private attachmentService :AttachmentService,
-    private modalController : ModalController,
     private alertCtrl :AlertController,
     private translate : TranslateService,
-    private androidPermissions: AndroidPermissions,
+    private file : File,
+    private platform : Platform,
+    private fileOpener: FileOpener
     ) { }
 
   ngOnInit() {
+    this.path = this.platform.is("ios") ? this.file.documentsDirectory : this.file.externalDataDirectory;
     this.imageList =[];
     this.createImageFromName(this.datas["fileName"]);
   }
 
   async openActionSheet() {
-    this.attachmentService.evidenceUpload(this.appFolderPath).then((data:any) =>{
+    this.attachmentService.evidenceUploadF(this.appFolderPath).then((data:any) =>{
       if(data.data){
       this.imageList.push(data.data);
       this.setLocalDatas(data.data);
@@ -72,20 +74,7 @@ export class EvidenceUploadComponent  implements OnInit {
     })
     }
 
-
-    async previewFile(fileData:any) {
-        const modal = await this.modalController.create({
-        component: EvidencePreviewComponent,
-        componentProps: {
-          mediaType: fileData.type,
-          mediaUrl: fileData.data
-        },
-      });
-      return await modal.present();
-    }
-
     stopRecord(){}
-    
     getExtensionFromName(fileName : string) {
       let splitString = fileName.split(".");
       let extension = splitString[splitString.length - 1];
@@ -137,5 +126,11 @@ export class EvidenceUploadComponent  implements OnInit {
       });
       await alert.present();
     }
-  
+    openFile(attachment :any) {
+      this.fileOpener.open(this.path + '/' + attachment.name, attachment.type)
+        .then(() => { console.log('File is opened'); })
+        .catch(e => {
+          // this.toast.showMessage(e.message,'danger');
+        });
+    }
   }

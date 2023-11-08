@@ -17,15 +17,18 @@ import { SliderTypeInputComponent } from './components/slider-type-input/slider-
 import { RemarksComponent } from './components/remarks/remarks.component';
 import { RemarksModalComponent } from './components/remarks-modal/remarks-modal.component';
 import { FooterActionButtonsComponent } from './components/footer-action-buttons/footer-action-buttons.component';
-import { EvidencePreviewComponent } from './components/evidence-preview/evidence-preview.component';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import {VgCoreModule} from '@videogular/ngx-videogular/core';
 import {VgControlsModule} from '@videogular/ngx-videogular/controls';
 import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
 import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
 
+import { Camera, CameraOptions, MediaType, PictureSourceType } from "@awesome-cordova-plugins/camera/ngx";
+import { Chooser } from "@awesome-cordova-plugins/chooser/ngx";
+import { FilePath } from "@awesome-cordova-plugins/file-path/ngx";
+import { File } from "@awesome-cordova-plugins/file/ngx";
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 @NgModule({
   declarations: [ItemCardComponent,DateTypeInputComponent,PageQuestionsComponent,TextTypeInputComponent,
     MultipleTypeInputComponent,
@@ -37,8 +40,7 @@ import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
     SliderTypeInputComponent,
     RemarksComponent,
     RemarksModalComponent,
-    FooterActionButtonsComponent,
-    EvidencePreviewComponent],
+    FooterActionButtonsComponent],
   imports: [
     CommonModule,
     IonicModule,
@@ -46,7 +48,6 @@ import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
     ReactiveFormsModule,
     TranslateModule,
     
-    PdfViewerModule,
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
@@ -63,13 +64,17 @@ import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
     SliderTypeInputComponent,
     RemarksComponent,
     RemarksModalComponent,
-    FooterActionButtonsComponent,
-    EvidencePreviewComponent],
+    FooterActionButtonsComponent],
   providers:[   
     CommonModule,
     ReactiveFormsModule,
     DatePipe,
-    InAppBrowser
+    InAppBrowser,
+    Camera,
+    FilePath,
+    Chooser,
+    File,
+    FileTransfer
   ]
 })
 export class SharedModule { }
